@@ -27,12 +27,7 @@ jobs:
 
       - run: npm ci
 
-      - name: Build
-        env:
-          # Vite uses this as the base path so assets resolve under
-          # https://<user>.github.io/<repo>/. The trailing slash matters.
-          GITHUB_PAGES_BASE: /${{ github.event.repository.name }}/
-        run: npm run build
+      - run: npm run build
 
       - uses: actions/upload-pages-artifact@v3
         with:
