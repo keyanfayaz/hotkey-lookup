@@ -6,6 +6,7 @@ interface Props {
   selected: Set<string>;
   onToggle: (id: string) => void;
   onSetAll: (ids: string[]) => void;
+  attachedRight?: boolean;
 }
 
 const CATEGORY_ORDER: AppCategory[] = [
@@ -48,7 +49,13 @@ const summary = (apps: App[], selected: Set<string>): string => {
   return `${selected.size} of ${apps.length}`;
 };
 
-export function AppFilter({ apps, selected, onToggle, onSetAll }: Props) {
+export function AppFilter({
+  apps,
+  selected,
+  onToggle,
+  onSetAll,
+  attachedRight,
+}: Props) {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -79,7 +86,9 @@ export function AppFilter({ apps, selected, onToggle, onSetAll }: Props) {
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
         aria-haspopup="listbox"
-        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-sm font-medium text-slate-700 hover:border-slate-300 transition-colors dark:bg-slate-900 dark:border-slate-800 dark:text-slate-200 dark:hover:border-slate-700"
+        className={`relative z-10 inline-flex items-center gap-2 px-3 py-1.5 border border-slate-200 bg-white text-sm font-medium text-slate-700 hover:border-slate-300 transition-colors dark:bg-slate-900 dark:border-slate-800 dark:text-slate-200 dark:hover:border-slate-700 ${
+          attachedRight ? "rounded-l-lg rounded-r-none" : "rounded-lg"
+        }`}
       >
         <span className="text-slate-400 dark:text-slate-500">Apps:</span>
         <span className="truncate max-w-[14rem]">{summary(apps, selected)}</span>

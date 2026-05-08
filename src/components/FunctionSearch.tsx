@@ -4,6 +4,7 @@ import { activeOS, type OSChoice } from "../hooks/useOS";
 import { buildSearchIndex } from "../lib/search";
 import type { Shortcut } from "../lib/types";
 import { AppFilter } from "./AppFilter";
+import { QuickFilter } from "./QuickFilter";
 import { ShortcutCard } from "./ShortcutCard";
 
 interface Props {
@@ -94,12 +95,21 @@ export function FunctionSearch({ osChoice }: Props) {
         </span>
       </div>
 
-      <AppFilter
-        apps={visibleApps}
-        selected={selectedApps}
-        onToggle={toggleApp}
-        onSetAll={(ids) => setSelectedApps(new Set(ids))}
-      />
+      <div className="flex items-center flex-wrap gap-y-2">
+        <AppFilter
+          apps={visibleApps}
+          selected={selectedApps}
+          onToggle={toggleApp}
+          onSetAll={(ids) => setSelectedApps(new Set(ids))}
+          attachedRight
+        />
+        <QuickFilter
+          apps={visibleApps}
+          selected={selectedApps}
+          onSetAll={(ids) => setSelectedApps(new Set(ids))}
+          os={activeOS(osChoice)}
+        />
+      </div>
 
       {results.length === 0 ? (
         <div className="card p-8 text-center text-slate-500 dark:text-slate-400">
