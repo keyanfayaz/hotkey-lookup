@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: theme("fontFamily.sans");
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background-color: rgb(99 102 241 / 0.3);
+  }
+}
+
+@layer components {
+  .kbd {
+    @apply inline-flex items-center justify-center min-w-[2rem] h-8 px-2
+           rounded-md font-mono text-sm font-semibold
+           bg-white text-slate-800
+           border border-slate-300
+           shadow-[0_2px_0_0_theme(colors.slate.300)]
+           dark:bg-slate-800 dark:text-slate-100
+           dark:border-slate-600
+           dark:shadow-[0_2px_0_0_theme(colors.slate.700)];
+  }
+
+  .kbd-mod {
+    @apply min-w-[2.25rem] bg-gradient-to-b from-white to-slate-50
+           dark:from-slate-700 dark:to-slate-800;
+  }
+
+  .kbd-plus {
+    @apply text-slate-400 dark:text-slate-500 font-mono text-sm select-none;
+  }
+
+  .pill {
+    @apply inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium
+           border transition-colors;
+  }
+
+  .pill-active {
+    @apply bg-indigo-600 text-white border-indigo-600 shadow-sm
+           dark:bg-indigo-500 dark:border-indigo-500;
+  }
+
+  .pill-inactive {
+    @apply bg-white text-slate-700 border-slate-200 hover:border-slate-300
+           dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700
+           dark:hover:border-slate-600;
+  }
+
+  .card {
+    @apply bg-white border border-slate-200 rounded-xl
+           dark:bg-slate-900 dark:border-slate-800;
+  }
+}
