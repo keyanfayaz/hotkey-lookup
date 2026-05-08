@@ -1,0 +1,195 @@
+import type { Shortcut } from "../../lib/types";
+
+const APP = "vscode";
+const id = (slug: string): string => `${APP}.${slug}`;
+
+export const SHORTCUTS: Shortcut[] = [
+  {
+    id: id("command-palette"),
+    appId: APP,
+    function: "Open Command Palette",
+    description: "Run any command by name.",
+    category: "Navigation",
+    combos: {
+      macos: ["Cmd+Shift+P", "F1"],
+      windows: ["Ctrl+Shift+P", "F1"],
+      linux: ["Ctrl+Shift+P", "F1"],
+    },
+  },
+  {
+    id: id("quick-open"),
+    appId: APP,
+    function: "Quick open file",
+    category: "Navigation",
+    combos: { macos: ["Cmd+P"], windows: ["Ctrl+P"], linux: ["Ctrl+P"] },
+  },
+  {
+    id: id("go-to-line"),
+    appId: APP,
+    function: "Go to line",
+    category: "Navigation",
+    combos: { macos: ["Ctrl+G"], windows: ["Ctrl+G"], linux: ["Ctrl+G"] },
+  },
+  {
+    id: id("go-to-symbol"),
+    appId: APP,
+    function: "Go to symbol in file",
+    category: "Navigation",
+    combos: {
+      macos: ["Cmd+Shift+O"],
+      windows: ["Ctrl+Shift+O"],
+      linux: ["Ctrl+Shift+O"],
+    },
+  },
+  {
+    id: id("go-to-definition"),
+    appId: APP,
+    function: "Go to definition",
+    category: "Navigation",
+    combos: { macos: ["F12"], windows: ["F12"], linux: ["F12"] },
+  },
+  {
+    id: id("toggle-terminal"),
+    appId: APP,
+    function: "Toggle integrated terminal",
+    category: "Panels",
+    combos: { macos: ["Ctrl+`"], windows: ["Ctrl+`"], linux: ["Ctrl+`"] },
+  },
+  {
+    id: id("toggle-sidebar"),
+    appId: APP,
+    function: "Toggle sidebar",
+    category: "Panels",
+    combos: { macos: ["Cmd+B"], windows: ["Ctrl+B"], linux: ["Ctrl+B"] },
+  },
+  {
+    id: id("split-editor"),
+    appId: APP,
+    function: "Split editor",
+    category: "Panels",
+    combos: { macos: ["Cmd+\\"], windows: ["Ctrl+\\"], linux: ["Ctrl+\\"] },
+  },
+  {
+    id: id("multi-cursor-below"),
+    appId: APP,
+    function: "Add cursor below",
+    category: "Editing",
+    combos: {
+      macos: ["Cmd+Option+ArrowDown"],
+      windows: ["Ctrl+Alt+ArrowDown"],
+      linux: ["Shift+Alt+ArrowDown"],
+    },
+  },
+  {
+    id: id("multi-cursor-above"),
+    appId: APP,
+    function: "Add cursor above",
+    category: "Editing",
+    combos: {
+      macos: ["Cmd+Option+ArrowUp"],
+      windows: ["Ctrl+Alt+ArrowUp"],
+      linux: ["Shift+Alt+ArrowUp"],
+    },
+  },
+  {
+    id: id("select-next-occurrence"),
+    appId: APP,
+    function: "Select next occurrence",
+    category: "Editing",
+    combos: { macos: ["Cmd+D"], windows: ["Ctrl+D"], linux: ["Ctrl+D"] },
+  },
+  {
+    id: id("rename-symbol"),
+    appId: APP,
+    function: "Rename symbol",
+    category: "Editing",
+    combos: { macos: ["F2"], windows: ["F2"], linux: ["F2"] },
+  },
+  {
+    id: id("format-document"),
+    appId: APP,
+    function: "Format document",
+    category: "Editing",
+    combos: {
+      macos: ["Shift+Option+F"],
+      windows: ["Shift+Alt+F"],
+      linux: ["Ctrl+Shift+I"],
+    },
+  },
+  {
+    id: id("comment-line"),
+    appId: APP,
+    function: "Toggle line comment",
+    category: "Editing",
+    combos: { macos: ["Cmd+/"], windows: ["Ctrl+/"], linux: ["Ctrl+/"] },
+  },
+  {
+    id: id("move-line-down"),
+    appId: APP,
+    function: "Move line down",
+    category: "Editing",
+    combos: {
+      macos: ["Option+ArrowDown"],
+      windows: ["Alt+ArrowDown"],
+      linux: ["Alt+ArrowDown"],
+    },
+  },
+  {
+    id: id("move-line-up"),
+    appId: APP,
+    function: "Move line up",
+    category: "Editing",
+    combos: {
+      macos: ["Option+ArrowUp"],
+      windows: ["Alt+ArrowUp"],
+      linux: ["Alt+ArrowUp"],
+    },
+  },
+  {
+    id: id("duplicate-line"),
+    appId: APP,
+    function: "Duplicate line",
+    category: "Editing",
+    combos: {
+      macos: ["Shift+Option+ArrowDown"],
+      windows: ["Shift+Alt+ArrowDown"],
+      linux: ["Ctrl+Shift+Alt+ArrowDown"],
+    },
+  },
+  {
+    id: id("find"),
+    appId: APP,
+    function: "Find in file",
+    category: "Search",
+    combos: { macos: ["Cmd+F"], windows: ["Ctrl+F"], linux: ["Ctrl+F"] },
+  },
+  {
+    id: id("replace"),
+    appId: APP,
+    function: "Replace in file",
+    category: "Search",
+    combos: { macos: ["Option+Cmd+F"], windows: ["Ctrl+H"], linux: ["Ctrl+H"] },
+  },
+  {
+    id: id("find-in-files"),
+    appId: APP,
+    function: "Find in all files",
+    category: "Search",
+    combos: {
+      macos: ["Cmd+Shift+F"],
+      windows: ["Ctrl+Shift+F"],
+      linux: ["Ctrl+Shift+F"],
+    },
+  },
+  {
+    id: id("zen-mode"),
+    appId: APP,
+    function: "Toggle Zen Mode",
+    category: "View",
+    combos: {
+      macos: ["Cmd+K Z"],
+      windows: ["Ctrl+K Z"],
+      linux: ["Ctrl+K Z"],
+    },
+  },
+];

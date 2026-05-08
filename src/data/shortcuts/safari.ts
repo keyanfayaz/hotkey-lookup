@@ -1,0 +1,120 @@
+import type { Shortcut } from "../../lib/types";
+
+const APP = "safari";
+const id = (slug: string): string => `${APP}.${slug}`;
+
+export const SHORTCUTS: Shortcut[] = [
+  {
+    id: id("new-tab"),
+    appId: APP,
+    function: "New tab",
+    category: "Tabs",
+    combos: { macos: ["Cmd+T"] },
+  },
+  {
+    id: id("close-tab"),
+    appId: APP,
+    function: "Close tab",
+    category: "Tabs",
+    combos: { macos: ["Cmd+W"] },
+  },
+  {
+    id: id("reopen-tab"),
+    appId: APP,
+    function: "Reopen last closed tab",
+    category: "Tabs",
+    combos: { macos: ["Cmd+Shift+T"] },
+  },
+  {
+    id: id("next-tab"),
+    appId: APP,
+    function: "Next tab",
+    category: "Tabs",
+    combos: { macos: ["Ctrl+Tab", "Cmd+Shift+]"] },
+  },
+  {
+    id: id("prev-tab"),
+    appId: APP,
+    function: "Previous tab",
+    category: "Tabs",
+    combos: { macos: ["Ctrl+Shift+Tab", "Cmd+Shift+["] },
+  },
+  {
+    id: id("focus-address"),
+    appId: APP,
+    function: "Focus address bar",
+    category: "Navigation",
+    combos: { macos: ["Cmd+L"] },
+  },
+  {
+    id: id("find"),
+    appId: APP,
+    function: "Find on page",
+    category: "Navigation",
+    combos: { macos: ["Cmd+F"] },
+  },
+  {
+    id: id("history"),
+    appId: APP,
+    function: "Show all history",
+    category: "Navigation",
+    combos: { macos: ["Cmd+Y"] },
+  },
+  {
+    id: id("downloads"),
+    appId: APP,
+    function: "Show Downloads",
+    category: "Navigation",
+    combos: { macos: ["Cmd+Option+L"] },
+  },
+  {
+    id: id("bookmark"),
+    appId: APP,
+    function: "Add bookmark",
+    category: "Navigation",
+    combos: { macos: ["Cmd+D"] },
+  },
+  {
+    id: id("reader-view"),
+    appId: APP,
+    function: "Toggle reader view",
+    category: "View",
+    combos: { macos: ["Cmd+Shift+R"] },
+  },
+  {
+    id: id("private"),
+    appId: APP,
+    function: "Open Private window",
+    category: "Window",
+    combos: { macos: ["Cmd+Shift+N"] },
+  },
+  {
+    id: id("show-tab-overview"),
+    appId: APP,
+    function: "Show Tab Overview",
+    category: "Tabs",
+    combos: { macos: ["Cmd+Shift+\\"] },
+  },
+  {
+    id: id("web-inspector"),
+    appId: APP,
+    function: "Open Web Inspector",
+    category: "Developer",
+    description: "Requires Develop menu enabled in Settings → Advanced.",
+    combos: { macos: ["Cmd+Option+I"] },
+  },
+  {
+    id: id("zoom-in"),
+    appId: APP,
+    function: "Zoom in",
+    category: "View",
+    combos: { macos: ["Cmd++"] },
+  },
+  {
+    id: id("zoom-out"),
+    appId: APP,
+    function: "Zoom out",
+    category: "View",
+    combos: { macos: ["Cmd+-"] },
+  },
+];
