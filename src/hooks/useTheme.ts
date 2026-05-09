@@ -5,12 +5,13 @@ export type Theme = "light" | "dark";
 const STORAGE_KEY = "hotkey-lookup:theme";
 
 const initialTheme = (): Theme => {
-  if (typeof window === "undefined") return "light";
+  if (typeof window === "undefined") return "dark";
   const stored = localStorage.getItem(STORAGE_KEY);
   if (stored === "light" || stored === "dark") return stored;
+  // Default to dark per the design
   return window.matchMedia?.("(prefers-color-scheme: dark)").matches
     ? "dark"
-    : "light";
+    : "dark";
 };
 
 export function useTheme(): { theme: Theme; toggle: () => void } {
@@ -18,6 +19,8 @@ export function useTheme(): { theme: Theme; toggle: () => void } {
 
   useEffect(() => {
     const root = document.documentElement;
+    root.dataset.theme = theme;
+    // Keep .dark class in sync for any remaining Tailwind dark: utilities
     if (theme === "dark") root.classList.add("dark");
     else root.classList.remove("dark");
     try {

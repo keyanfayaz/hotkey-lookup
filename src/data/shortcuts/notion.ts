@@ -1,0 +1,76 @@
+import type { Shortcut } from "../../lib/types";
+
+export const SHORTCUTS: Shortcut[] = [
+  {
+    id: "notion.new-page",
+    appId: "notion",
+    function: "New page",
+    category: "Navigation",
+    combos: { macos: ["Cmd+N"], windows: ["Ctrl+N"], linux: ["Ctrl+N"] },
+  },
+  {
+    id: "notion.quick-find",
+    appId: "notion",
+    function: "Quick find",
+    description: "Fuzzy-search pages and blocks.",
+    category: "Navigation",
+    combos: { macos: ["Cmd+P"], windows: ["Ctrl+P"], linux: ["Ctrl+P"] },
+  },
+  {
+    id: "notion.toggle-sidebar",
+    appId: "notion",
+    function: "Toggle sidebar",
+    category: "Navigation",
+    combos: { macos: ["Cmd+\\"], windows: ["Ctrl+\\"], linux: ["Ctrl+\\"] },
+  },
+  {
+    id: "notion.dark-mode",
+    appId: "notion",
+    function: "Toggle dark mode",
+    category: "Navigation",
+    combos: { macos: ["Cmd+Shift+L"], windows: ["Ctrl+Shift+L"], linux: ["Ctrl+Shift+L"] },
+  },
+  {
+    id: "notion.heading-1",
+    appId: "notion",
+    function: "Heading 1",
+    description: "Turn block into a Heading 1.",
+    category: "Blocks",
+    combos: { macos: ["Cmd+Alt+1"], windows: ["Ctrl+Shift+1"], linux: ["Ctrl+Shift+1"] },
+  },
+  {
+    id: "notion.heading-2",
+    appId: "notion",
+    function: "Heading 2",
+    category: "Blocks",
+    combos: { macos: ["Cmd+Alt+2"], windows: ["Ctrl+Shift+2"], linux: ["Ctrl+Shift+2"] },
+  },
+  {
+    id: "notion.bullet-list",
+    appId: "notion",
+    function: "Bullet list",
+    category: "Blocks",
+    combos: { macos: ["Cmd+Shift+8"], windows: ["Ctrl+Shift+8"], linux: ["Ctrl+Shift+8"] },
+  },
+  {
+    id: "notion.bold",
+    appId: "notion",
+    function: "Bold",
+    category: "Editing",
+    combos: { macos: ["Cmd+B"], windows: ["Ctrl+B"], linux: ["Ctrl+B"] },
+  },
+  {
+    id: "notion.italic",
+    appId: "notion",
+    function: "Italic",
+    category: "Editing",
+    combos: { macos: ["Cmd+I"], windows: ["Ctrl+I"], linux: ["Ctrl+I"] },
+  },
+  {
+    id: "notion.inline-code",
+    appId: "notion",
+    function: "Inline code",
+    category: "Editing",
+    combos: { macos: ["Cmd+E"], windows: ["Ctrl+E"], linux: ["Ctrl+E"] },
+  },
+];

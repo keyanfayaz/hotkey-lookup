@@ -1,0 +1,70 @@
+import type { Shortcut } from "../../lib/types";
+
+export const SHORTCUTS: Shortcut[] = [
+  {
+    id: "terminal.start-of-line",
+    appId: "terminal",
+    function: "Move to start of line",
+    category: "Cursor",
+    combos: { macos: ["Ctrl+A"], windows: ["Ctrl+A"], linux: ["Ctrl+A"] },
+  },
+  {
+    id: "terminal.end-of-line",
+    appId: "terminal",
+    function: "Move to end of line",
+    category: "Cursor",
+    combos: { macos: ["Ctrl+E"], windows: ["Ctrl+E"], linux: ["Ctrl+E"] },
+  },
+  {
+    id: "terminal.clear-screen",
+    appId: "terminal",
+    function: "Clear screen",
+    category: "Cursor",
+    combos: { macos: ["Ctrl+L"], windows: ["Ctrl+L"], linux: ["Ctrl+L"] },
+  },
+  {
+    id: "terminal.delete-word",
+    appId: "terminal",
+    function: "Delete word back",
+    category: "Cursor",
+    combos: { macos: ["Ctrl+W"], windows: ["Ctrl+W"], linux: ["Ctrl+W"] },
+  },
+  {
+    id: "terminal.search-history",
+    appId: "terminal",
+    function: "Search history",
+    description: "Reverse incremental history search.",
+    category: "History",
+    combos: { macos: ["Ctrl+R"], windows: ["Ctrl+R"], linux: ["Ctrl+R"] },
+  },
+  {
+    id: "terminal.prev-command",
+    appId: "terminal",
+    function: "Previous command",
+    category: "History",
+    combos: { macos: ["Ctrl+P"], windows: ["Ctrl+P"], linux: ["Ctrl+P"] },
+  },
+  {
+    id: "terminal.cancel",
+    appId: "terminal",
+    function: "Cancel current process",
+    category: "Process",
+    combos: { macos: ["Ctrl+C"], windows: ["Ctrl+C"], linux: ["Ctrl+C"] },
+  },
+  {
+    id: "terminal.eof",
+    appId: "terminal",
+    function: "Send EOF / exit",
+    description: "Send end-of-file or exit the shell.",
+    category: "Process",
+    combos: { macos: ["Ctrl+D"], windows: ["Ctrl+D"], linux: ["Ctrl+D"] },
+  },
+  {
+    id: "terminal.suspend",
+    appId: "terminal",
+    function: "Suspend process",
+    description: "Suspend to background (fg to resume).",
+    category: "Process",
+    combos: { macos: ["Ctrl+Z"], windows: ["Ctrl+Z"], linux: ["Ctrl+Z"] },
+  },
+];

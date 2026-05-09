@@ -24,6 +24,7 @@ export interface App {
   supportedOS: OS[];
   category: AppCategory;
   blurb?: string;
+  hint?: string;
 }
 
 export interface Shortcut {

@@ -6,32 +6,44 @@ export default {
     extend: {
       fontFamily: {
         sans: [
-          "Inter",
+          "Geist",
           "ui-sans-serif",
           "system-ui",
           "-apple-system",
-          "Segoe UI",
-          "Roboto",
           "sans-serif",
         ],
         mono: [
-          "JetBrains Mono",
+          "Geist Mono",
           "ui-monospace",
           "SFMono-Regular",
           "Menlo",
-          "Consolas",
           "monospace",
         ],
       },
       keyframes: {
         pulseKey: {
-          "0%": { transform: "scale(1)", boxShadow: "0 0 0 0 rgba(99,102,241,0.6)" },
-          "70%": { transform: "scale(1.06)", boxShadow: "0 0 0 12px rgba(99,102,241,0)" },
-          "100%": { transform: "scale(1)", boxShadow: "0 0 0 0 rgba(99,102,241,0)" },
+          "0%": { transform: "scale(1)", boxShadow: "0 0 0 0 var(--accent-soft)" },
+          "70%": { transform: "scale(1.06)", boxShadow: "0 0 0 12px transparent" },
+          "100%": { transform: "scale(1)", boxShadow: "0 0 0 0 transparent" },
+        },
+        recDot: {
+          "0%, 100%": { boxShadow: "0 0 0 0 var(--accent-soft)" },
+          "50%": { boxShadow: "0 0 0 6px transparent" },
+        },
+        fadein: {
+          from: { opacity: "0" },
+          to: { opacity: "1" },
+        },
+        pop: {
+          from: { opacity: "0", transform: "translateY(4px)" },
+          to: { opacity: "1", transform: "none" },
         },
       },
       animation: {
         pulseKey: "pulseKey 0.5s ease-out",
+        recDot: "recDot 1.6s ease-in-out infinite",
+        fadein: "fadein 0.18s ease",
+        pop: "pop 0.18s ease",
       },
     },
   },

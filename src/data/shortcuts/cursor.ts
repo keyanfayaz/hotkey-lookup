@@ -1,0 +1,60 @@
+import type { Shortcut } from "../../lib/types";
+
+export const SHORTCUTS: Shortcut[] = [
+  {
+    id: "cursor.ai-chat",
+    appId: "cursor",
+    function: "Open AI chat",
+    description: "Open the AI chat sidebar.",
+    category: "AI",
+    combos: { macos: ["Cmd+L"], windows: ["Ctrl+L"], linux: ["Ctrl+L"] },
+  },
+  {
+    id: "cursor.inline-edit",
+    appId: "cursor",
+    function: "Inline edit (Cmd-K)",
+    description: "Open inline edit panel at cursor.",
+    category: "AI",
+    combos: { macos: ["Cmd+K"], windows: ["Ctrl+K"], linux: ["Ctrl+K"] },
+  },
+  {
+    id: "cursor.composer",
+    appId: "cursor",
+    function: "Toggle composer",
+    description: "Open the full-file AI composer.",
+    category: "AI",
+    combos: { macos: ["Cmd+I"], windows: ["Ctrl+I"], linux: ["Ctrl+I"] },
+  },
+  {
+    id: "cursor.accept-suggestion",
+    appId: "cursor",
+    function: "Accept AI suggestion",
+    description: "Accept the inline AI suggestion.",
+    category: "AI",
+    combos: { macos: ["Tab"], windows: ["Tab"], linux: ["Tab"] },
+  },
+  {
+    id: "cursor.reject-suggestion",
+    appId: "cursor",
+    function: "Reject AI suggestion",
+    description: "Dismiss the inline AI suggestion.",
+    category: "AI",
+    combos: { macos: ["Escape"], windows: ["Escape"], linux: ["Escape"] },
+  },
+  {
+    id: "cursor.quick-open",
+    appId: "cursor",
+    function: "Quick open file",
+    description: "Fuzzy-find and open a file.",
+    category: "Navigation",
+    combos: { macos: ["Cmd+P"], windows: ["Ctrl+P"], linux: ["Ctrl+P"] },
+  },
+  {
+    id: "cursor.command-palette",
+    appId: "cursor",
+    function: "Command palette",
+    description: "Run any editor command by name.",
+    category: "Navigation",
+    combos: { macos: ["Cmd+Shift+P"], windows: ["Ctrl+Shift+P"], linux: ["Ctrl+Shift+P"] },
+  },
+];

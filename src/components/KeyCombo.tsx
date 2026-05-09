@@ -5,44 +5,55 @@ import type { OS } from "../lib/types";
 interface Props {
   combo: string;
   os: OS;
+  dim?: boolean;
   pulse?: boolean;
 }
 
-export function KeyCombo({ combo, os, pulse }: Props) {
-  // Combos like "Cmd+K Z" are "chord" sequences — split on space.
+const WIDE_KEYS = new Set([
+  "shift", "return", "enter", "space", "tab", "backspace",
+  "esc", "escape", "delete", "del",
+]);
+
+export function KeyCombo({ combo, os, dim, pulse }: Props) {
   const segments = combo.trim().split(/\s+/);
   return (
-    <span className="inline-flex items-center gap-1.5 flex-wrap">
+    <span className="keycombo">
       {segments.map((seg, segIdx) => {
         const parsed = parseCombo(seg);
         if (!parsed) {
           return (
-            <span key={segIdx} className="kbd">
+            <kbd key={segIdx} className={`keychip${dim ? " dim" : ""}${pulse ? " animate-pulseKey" : ""}`}>
               {seg}
-            </span>
+            </kbd>
           );
         }
         const tokens = comboTokens(parsed, os);
         return (
           <Fragment key={segIdx}>
             {segIdx > 0 && (
-              <span className="text-xs uppercase tracking-wider text-slate-400 dark:text-slate-500 px-1">
+              <span style={{ color: "var(--fg-4)", fontSize: "11px", fontFamily: "var(--font-mono)", margin: "0 4px" }}>
                 then
               </span>
             )}
-            <span className="inline-flex items-center gap-1">
-              {tokens.map((t, i) => (
-                <Fragment key={i}>
-                  {i > 0 && <span className="kbd-plus">+</span>}
-                  <kbd
-                    className={`kbd ${t.type === "mod" ? "kbd-mod" : ""} ${
-                      pulse ? "animate-pulseKey" : ""
-                    }`}
-                  >
-                    {t.label}
-                  </kbd>
-                </Fragment>
-              ))}
+            <span className="keycombo">
+              {tokens.map((t, i) => {
+                const isWide = WIDE_KEYS.has(t.label.toLowerCase());
+                return (
+                  <Fragment key={i}>
+                    {i > 0 && <span className="kc-sep">+</span>}
+                    <kbd
+                      className={[
+                        "keychip",
+                        dim ? "dim" : "",
+                        isWide ? "wide" : "",
+                        pulse ? "animate-pulseKey" : "",
+                      ].filter(Boolean).join(" ")}
+                    >
+                      {t.label}
+                    </kbd>
+                  </Fragment>
+                );
+              })}
             </span>
           </Fragment>
         );

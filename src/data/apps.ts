@@ -8,6 +8,7 @@ export const APPS: App[] = [
     supportedOS: ["macos"],
     category: "system",
     blurb: "System-wide shortcuts on macOS.",
+    hint: "system-wide",
   },
   {
     id: "system-windows",
@@ -16,6 +17,7 @@ export const APPS: App[] = [
     supportedOS: ["windows"],
     category: "system",
     blurb: "System-wide shortcuts on Windows.",
+    hint: "system-wide",
   },
   {
     id: "system-linux",
@@ -24,6 +26,7 @@ export const APPS: App[] = [
     supportedOS: ["linux"],
     category: "system",
     blurb: "GNOME desktop defaults — close to most distros.",
+    hint: "system-wide",
   },
   {
     id: "chrome",
@@ -31,6 +34,7 @@ export const APPS: App[] = [
     icon: "🌐",
     supportedOS: ["macos", "windows", "linux"],
     category: "browser",
+    hint: "browser",
   },
   {
     id: "firefox",
@@ -38,6 +42,7 @@ export const APPS: App[] = [
     icon: "🦊",
     supportedOS: ["macos", "windows", "linux"],
     category: "browser",
+    hint: "browser",
   },
   {
     id: "safari",
@@ -45,6 +50,7 @@ export const APPS: App[] = [
     icon: "🧭",
     supportedOS: ["macos"],
     category: "browser",
+    hint: "browser · macOS only",
   },
   {
     id: "vscode",
@@ -52,6 +58,23 @@ export const APPS: App[] = [
     icon: "🧩",
     supportedOS: ["macos", "windows", "linux"],
     category: "editor",
+    hint: "editor",
+  },
+  {
+    id: "cursor",
+    name: "Cursor",
+    icon: "✦",
+    supportedOS: ["macos", "windows", "linux"],
+    category: "editor",
+    hint: "AI editor",
+  },
+  {
+    id: "terminal",
+    name: "Terminal",
+    icon: ">_",
+    supportedOS: ["macos", "windows", "linux"],
+    category: "system",
+    hint: "shell",
   },
   {
     id: "slack",
@@ -59,6 +82,23 @@ export const APPS: App[] = [
     icon: "💬",
     supportedOS: ["macos", "windows", "linux"],
     category: "productivity",
+    hint: "chat",
+  },
+  {
+    id: "notion",
+    name: "Notion",
+    icon: "📄",
+    supportedOS: ["macos", "windows", "linux"],
+    category: "productivity",
+    hint: "docs",
+  },
+  {
+    id: "linear",
+    name: "Linear",
+    icon: "◆",
+    supportedOS: ["macos", "windows", "linux"],
+    category: "productivity",
+    hint: "issues",
   },
   {
     id: "figma",
@@ -66,6 +106,7 @@ export const APPS: App[] = [
     icon: "🎨",
     supportedOS: ["macos", "windows", "linux"],
     category: "design",
+    hint: "design",
   },
   {
     id: "google-docs",
@@ -73,6 +114,15 @@ export const APPS: App[] = [
     icon: "📝",
     supportedOS: ["macos", "windows", "linux"],
     category: "office",
+    hint: "docs",
+  },
+  {
+    id: "finder",
+    name: "Finder / Explorer",
+    icon: "📁",
+    supportedOS: ["macos", "windows", "linux"],
+    category: "system",
+    hint: "files",
   },
 ];
 
