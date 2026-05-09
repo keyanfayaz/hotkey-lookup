@@ -90,7 +90,7 @@ export function ShortcutModal({ shortcut, os, onClose, onNavigateToApp }: Props)
               ))}
             </div>
           ) : (
-            <div className="smodal-no-combo">No binding for {OS_LABELS[os]}</div>
+            <div className="smodal-no-combo">No hotkey for {OS_LABELS[os]}</div>
           )}
 
           <Keyboard os={os} highlighted={highlighted} scale={0.85} />

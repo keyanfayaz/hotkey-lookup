@@ -260,7 +260,7 @@ export function ListenOverlay({ os, onClose, onSelectApp }: Props) {
           )}
           {phase === "locked" && matches.length === 0 && (
             <div className="listen-placeholder">
-              no_known_binding for this combo on {os.toUpperCase()}
+              no_known_hotkey for this combo on {os.toUpperCase()}
             </div>
           )}
           {matches.map((s) => {

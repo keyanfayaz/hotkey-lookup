@@ -162,7 +162,9 @@ export default function App() {
         )}
         {view.kind === "browse" && (
           <Browse
+            os={os}
             onSelect={(appId) => setView({ kind: "cheatsheet", appId })}
+            onSelectShortcut={setSelectedShortcut}
           />
         )}
         {view.kind === "cheatsheet" && (
@@ -171,6 +173,7 @@ export default function App() {
             os={os}
             onBack={() => setView({ kind: "browse" })}
             onSelectShortcut={setSelectedShortcut}
+            onSelectApp={(id) => setView({ kind: "cheatsheet", appId: id })}
           />
         )}
       </main>
@@ -178,7 +181,17 @@ export default function App() {
       {/* Footer */}
       <footer className="foot">
         <span style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: "var(--fg-3)" }}>
-          hotkey.lookup · {SHORTCUTS.length} bindings · {APPS.length} surfaces
+          hotkey.lookup · {SHORTCUTS.length} hotkeys · {APPS.length} apps
+          <span className="dot-sep" style={{ margin: "0 8px" }}>·</span>
+          an app by{" "}
+          <a
+            href="https://kfayaz.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: "inherit", textDecoration: "underline" }}
+          >
+            Keyan Fayaz
+          </a>
         </span>
         <span className="foot-keys">
           <kbd className="keychip dim">L</kbd>
