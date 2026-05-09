@@ -21,11 +21,11 @@ export const APPS: App[] = [
   },
   {
     id: "system-linux",
-    name: "Linux (GNOME)",
+    name: "Linux",
     icon: "🐧",
     supportedOS: ["linux"],
     category: "system",
-    blurb: "GNOME desktop defaults — close to most distros.",
+    blurb: "Common desktop shortcuts — defaults reflect most distros.",
     hint: "system-wide",
   },
   {
