@@ -2,20 +2,194 @@
 <html lang="en" class="h-full dark" data-theme="dark" data-accent="amber">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="light dark" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <title>Hotkey Lookup — Keyboard Shortcuts for macOS, Windows &amp; Linux</title>
     <meta
       name="description"
-      content="Find keyboard shortcuts across macOS, Windows, and Linux — for the OS itself and popular apps. Or press a combo and discover what it does everywhere."
+      content="Search keyboard shortcuts across macOS, Windows, and Linux — system-wide and for the apps you use every day. Or press a combo and see what it does everywhere."
     />
+    <meta name="application-name" content="Hotkey Lookup" />
+    <meta name="apple-mobile-web-app-title" content="Hotkey Lookup" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="author" content="Hotkey Lookup" />
+    <meta
+      name="keywords"
+      content="keyboard shortcuts, hotkeys, macOS shortcuts, Windows shortcuts, Linux shortcuts, Chrome shortcuts, VS Code shortcuts, Figma shortcuts, Slack shortcuts, Notion shortcuts, cheatsheet, keybindings"
+    />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1" />
+    <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
+
+    <link rel="canonical" href="https://hotkeylookup.com/" />
+
+    <!-- Icons & PWA -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="mask-icon" href="/favicon.svg" color="#6366f1" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Hotkey Lookup" />
+    <meta property="og:title" content="Hotkey Lookup — Keyboard Shortcuts for macOS, Windows &amp; Linux" />
+    <meta
+      property="og:description"
+      content="Search keyboard shortcuts across macOS, Windows, and Linux — system-wide and for the apps you use every day. Or press a combo and see what it does everywhere."
+    />
+    <meta property="og:url" content="https://hotkeylookup.com/" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image" content="https://hotkeylookup.com/og-image.png" />
+    <meta property="og:image:secure_url" content="https://hotkeylookup.com/og-image.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Hotkey Lookup — every shortcut, every OS. Keyboard shortcuts for macOS, Windows, and Linux."
+    />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Hotkey Lookup — Keyboard Shortcuts for macOS, Windows &amp; Linux" />
+    <meta
+      name="twitter:description"
+      content="Search keyboard shortcuts across macOS, Windows, and Linux — system-wide and for the apps you use every day."
+    />
+    <meta name="twitter:image" content="https://hotkeylookup.com/og-image.png" />
+    <meta
+      name="twitter:image:alt"
+      content="Hotkey Lookup — every shortcut, every OS."
+    />
+
+    <!-- Performance hints -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap"
+    />
     <link
       href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
-    <title>Hotkey Lookup — every shortcut, every OS</title>
+
+    <!-- Structured data: WebApplication -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Hotkey Lookup",
+      "alternateName": "HotkeyLookup",
+      "url": "https://hotkeylookup.com/",
+      "description": "Search keyboard shortcuts across macOS, Windows, and Linux — system-wide and for the apps you use every day. Or press a combo and see what it does everywhere.",
+      "applicationCategory": "UtilitiesApplication",
+      "applicationSubCategory": "Productivity",
+      "operatingSystem": "macOS, Windows, Linux",
+      "browserRequirements": "Requires JavaScript. Requires a modern browser.",
+      "inLanguage": "en",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "featureList": [
+        "Search shortcuts across operating systems",
+        "Compare shortcuts between macOS, Windows, and Linux",
+        "Browse shortcuts by app or by action",
+        "Visualize shortcuts on a keyboard",
+        "Listen mode: press a combo to see what it does",
+        "Per-app cheatsheets"
+      ],
+      "image": "https://hotkeylookup.com/og-image.png",
+      "screenshot": "https://hotkeylookup.com/og-image.png"
+    }
+    </script>
+
+    <!-- Structured data: ItemList of supported apps -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "Apps and operating systems covered by Hotkey Lookup",
+      "itemListOrder": "https://schema.org/ItemListUnordered",
+      "numberOfItems": 15,
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1,  "name": "macOS" },
+        { "@type": "ListItem", "position": 2,  "name": "Windows" },
+        { "@type": "ListItem", "position": 3,  "name": "Linux" },
+        { "@type": "ListItem", "position": 4,  "name": "Chrome" },
+        { "@type": "ListItem", "position": 5,  "name": "Firefox" },
+        { "@type": "ListItem", "position": 6,  "name": "Safari" },
+        { "@type": "ListItem", "position": 7,  "name": "VS Code" },
+        { "@type": "ListItem", "position": 8,  "name": "Cursor" },
+        { "@type": "ListItem", "position": 9,  "name": "Terminal" },
+        { "@type": "ListItem", "position": 10, "name": "Slack" },
+        { "@type": "ListItem", "position": 11, "name": "Notion" },
+        { "@type": "ListItem", "position": 12, "name": "Linear" },
+        { "@type": "ListItem", "position": 13, "name": "Figma" },
+        { "@type": "ListItem", "position": 14, "name": "Google Docs" },
+        { "@type": "ListItem", "position": 15, "name": "Finder / Explorer" }
+      ]
+    }
+    </script>
+
+    <!-- Structured data: FAQ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is Hotkey Lookup?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Hotkey Lookup is a free web tool for searching and comparing keyboard shortcuts across macOS, Windows, and Linux — both system-wide shortcuts and shortcuts for popular apps like Chrome, VS Code, Figma, Slack, Notion, and more."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which operating systems does it cover?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Hotkey Lookup covers macOS, Windows, and Linux. You can view shortcuts side by side to see how the same action maps across each platform."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Hotkey Lookup free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Hotkey Lookup is completely free to use, with no account required."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I look up what a key combination does?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Listen mode lets you press a key combination and see what it does across macOS, Windows, Linux, and the apps you use."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which apps are supported?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Supported apps include Chrome, Firefox, Safari, VS Code, Cursor, Terminal, Slack, Notion, Linear, Figma, Google Docs, and Finder / Explorer, alongside system-wide shortcuts for macOS, Windows, and Linux."
+          }
+        }
+      ]
+    }
+    </script>
   </head>
   <body class="h-full">
     <div id="root"></div>
