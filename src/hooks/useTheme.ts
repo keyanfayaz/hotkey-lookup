@@ -6,12 +6,13 @@ const STORAGE_KEY = "hotkey-lookup:theme";
 
 const initialTheme = (): Theme => {
   if (typeof window === "undefined") return "dark";
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (stored === "light" || stored === "dark") return stored;
-  // Default to dark per the design
-  return window.matchMedia?.("(prefers-color-scheme: dark)").matches
-    ? "dark"
-    : "dark";
+  try {
+    const stored = window.localStorage?.getItem(STORAGE_KEY);
+    if (stored === "light" || stored === "dark") return stored;
+  } catch {
+    // ignore
+  }
+  return "dark";
 };
 
 export function useTheme(): { theme: Theme; toggle: () => void } {

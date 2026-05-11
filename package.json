@@ -6,14 +6,19 @@
   "description": "Find keyboard shortcuts across operating systems and popular apps — or press a combo and see what it does everywhere.",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "prebuild": "tsx scripts/build-related.ts",
+    "build": "tsc -b && vite-react-ssg build && tsx scripts/build-sitemap.ts",
     "preview": "vite preview",
     "typecheck": "tsc -b --noEmit"
   },
   "dependencies": {
     "fuse.js": "^7.0.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-helmet-async": "^1.3.0",
+    "react-router-dom": "^6.30.3",
+    "slugify": "^1.6.9",
+    "vite-react-ssg": "^0.9.1-beta.1"
   },
   "devDependencies": {
     "@types/node": "^20.19.40",
@@ -23,6 +28,7 @@
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.14",
+    "tsx": "^4.21.0",
     "typescript": "^5.6.3",
     "vite": "^5.4.10"
   }

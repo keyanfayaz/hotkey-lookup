@@ -14,9 +14,13 @@ export function useOS(): {
 } {
   const [detected] = useState<OS | null>(() => detectOS());
   const [choice, setChoiceState] = useState<OS>(() => {
-    if (typeof localStorage !== "undefined") {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (isOS(stored)) return stored;
+    try {
+      if (typeof window !== "undefined" && typeof window.localStorage !== "undefined") {
+        const stored = window.localStorage.getItem(STORAGE_KEY);
+        if (isOS(stored)) return stored;
+      }
+    } catch {
+      // ignore
     }
     return detectOS() ?? "macos";
   });
@@ -24,14 +28,16 @@ export function useOS(): {
   const setChoice = (next: OS) => {
     setChoiceState(next);
     try {
-      localStorage.setItem(STORAGE_KEY, next);
+      if (typeof window !== "undefined") window.localStorage.setItem(STORAGE_KEY, next);
     } catch {
       // ignore
     }
   };
 
   useEffect(() => {
-    document.documentElement.dataset.os = choice;
+    if (typeof document !== "undefined") {
+      document.documentElement.dataset.os = choice;
+    }
   }, [choice]);
 
   return { choice, setChoice, detected };

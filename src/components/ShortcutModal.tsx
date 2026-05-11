@@ -17,9 +17,10 @@ interface Props {
   os: OS;
   onClose: () => void;
   onNavigateToApp?: (appId: string) => void;
+  onOpenDetail?: (s: Shortcut) => void;
 }
 
-export function ShortcutModal({ shortcut, os, onClose, onNavigateToApp }: Props) {
+export function ShortcutModal({ shortcut, os, onClose, onNavigateToApp, onOpenDetail }: Props) {
   const app = APP_BY_ID[shortcut.appId];
 
   const currentCombos = shortcut.combos[os] ?? [];
@@ -115,6 +116,12 @@ export function ShortcutModal({ shortcut, os, onClose, onNavigateToApp }: Props)
 
           {shortcut.description && (
             <p className="smodal-desc">{shortcut.description}</p>
+          )}
+
+          {onOpenDetail && (
+            <button className="smodal-detail-link" onClick={() => onOpenDetail(shortcut)}>
+              Open detail page →
+            </button>
           )}
         </div>
       </div>

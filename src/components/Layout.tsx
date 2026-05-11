@@ -1,20 +1,14 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useOS } from "./hooks/useOS";
-import { useTheme } from "./hooks/useTheme";
-import { SHORTCUTS, APPS } from "./data";
-import type { OS, Shortcut } from "./lib/types";
-import { Palette } from "./components/Palette";
-import { Keyboard, comboToKeySet } from "./components/Keyboard";
-import { Browse } from "./components/Browse";
-import { Cheatsheet } from "./components/Cheatsheet";
-import { ListenOverlay } from "./components/ListenOverlay";
-import { ShortcutModal } from "./components/ShortcutModal";
-import { OSIcon } from "./components/AppIcon";
-
-type View =
-  | { kind: "home" }
-  | { kind: "browse" }
-  | { kind: "cheatsheet"; appId: string };
+import { useCallback, useEffect, useState } from "react";
+import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useOS } from "../hooks/useOS";
+import { useTheme } from "../hooks/useTheme";
+import { SHORTCUTS, APPS } from "../data";
+import type { OS, Shortcut } from "../lib/types";
+import { OSIcon } from "./AppIcon";
+import { ListenOverlay } from "./ListenOverlay";
+import { ShortcutModal } from "./ShortcutModal";
+import { EmailSignup } from "./EmailSignup";
+import { shortcutPath } from "../lib/slugs";
 
 function ThemeIcon({ theme }: { theme: string }) {
   if (theme === "dark") {
@@ -38,22 +32,21 @@ const OS_LABELS: Record<OS, string> = {
   linux: "Linux",
 };
 
-export default function App() {
+export default function Layout() {
   const { choice: os, setChoice: setOs } = useOS();
   const { theme, toggle: toggleTheme } = useTheme();
-  const [view, setView] = useState<View>({ kind: "home" });
   const [listen, setListen] = useState(false);
-  const [focusedShortcut, setFocusedShortcut] = useState<Shortcut | null>(null);
   const [selectedShortcut, setSelectedShortcut] = useState<Shortcut | null>(null);
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  // Apply accent default on mount
   useEffect(() => {
+    if (typeof document === "undefined") return;
     if (!document.documentElement.dataset.accent) {
       document.documentElement.dataset.accent = "amber";
     }
   }, []);
 
-  // Global "L" key → listen mode
   useEffect(() => {
     const h = (e: KeyboardEvent) => {
       if (listen) return;
@@ -67,24 +60,22 @@ export default function App() {
     return () => window.removeEventListener("keydown", h);
   }, [listen]);
 
-  const onPick = useCallback(
-    (s: Shortcut) => setSelectedShortcut(s),
-    [],
-  );
+  const browseActive = location.pathname.startsWith("/browse") ||
+    location.pathname.startsWith("/apps");
+  const homeActive = location.pathname === "/";
 
-  // Keyboard visualizer highlight from focused palette row
-  const highlighted = useMemo(() => {
-    if (!focusedShortcut) return new Set<string>();
-    const combos = focusedShortcut.combos[os] ?? [];
-    if (combos.length === 0) return new Set<string>();
-    return comboToKeySet(combos[0]);
-  }, [focusedShortcut, os]);
+  const onOSClick = useCallback(
+    (o: OS) => {
+      setOs(o);
+      navigate(`/os/${o}`);
+    },
+    [navigate, setOs],
+  );
 
   return (
     <>
-      {/* Top bar */}
       <header className="topbar">
-        <button className="brand" onClick={() => setView({ kind: "home" })}>
+        <Link className="brand" to="/">
           <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden>
             <rect x="2" y="6" width="20" height="12" rx="2" fill="none" stroke="currentColor" strokeWidth="1.5" />
             <circle cx="7" cy="12" r="0.9" fill="currentColor" />
@@ -95,21 +86,15 @@ export default function App() {
           <span className="brand-name">
             hotkey<span className="brand-dot">.</span>lookup
           </span>
-        </button>
+        </Link>
 
         <nav className="topnav">
-          <button
-            className={`topnav-btn${view.kind === "home" ? " on" : ""}`}
-            onClick={() => setView({ kind: "home" })}
-          >
+          <NavLink to="/" className={`topnav-btn${homeActive ? " on" : ""}`}>
             Search
-          </button>
-          <button
-            className={`topnav-btn${view.kind === "browse" || view.kind === "cheatsheet" ? " on" : ""}`}
-            onClick={() => setView({ kind: "browse" })}
-          >
+          </NavLink>
+          <NavLink to="/browse" className={`topnav-btn${browseActive ? " on" : ""}`}>
             Browse
-          </button>
+          </NavLink>
           <button
             className="topnav-btn topnav-listen"
             onClick={() => setListen(true)}
@@ -127,10 +112,7 @@ export default function App() {
                 role="tab"
                 aria-selected={os === o}
                 className={`osswitch-btn${os === o ? " on" : ""}`}
-                onClick={() => {
-                  setOs(o);
-                  setView({ kind: "cheatsheet", appId: `system-${o}` });
-                }}
+                onClick={() => onOSClick(o)}
                 title={`View ${OS_LABELS[o]} system shortcuts`}
               >
                 <OSIcon os={o} size={13} />
@@ -149,36 +131,10 @@ export default function App() {
         </div>
       </header>
 
-      {/* Main content */}
       <main style={{ flex: 1 }}>
-        {view.kind === "home" && (
-          <HomeView
-            os={os}
-            onPick={onPick}
-            onPickApp={(appId) => setView({ kind: "cheatsheet", appId })}
-            highlighted={highlighted}
-            onFocusedShortcut={setFocusedShortcut}
-          />
-        )}
-        {view.kind === "browse" && (
-          <Browse
-            os={os}
-            onSelect={(appId) => setView({ kind: "cheatsheet", appId })}
-            onSelectShortcut={setSelectedShortcut}
-          />
-        )}
-        {view.kind === "cheatsheet" && (
-          <Cheatsheet
-            appId={view.appId}
-            os={os}
-            onBack={() => setView({ kind: "browse" })}
-            onSelectShortcut={setSelectedShortcut}
-            onSelectApp={(id) => setView({ kind: "cheatsheet", appId: id })}
-          />
-        )}
+        <Outlet context={{ os, setSelectedShortcut, setListen }} />
       </main>
 
-      {/* Footer */}
       <footer className="foot">
         <span style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: "var(--fg-3)" }}>
           hotkey.lookup · {SHORTCUTS.length} hotkeys · {APPS.length} apps
@@ -193,6 +149,7 @@ export default function App() {
             Keyan Fayaz
           </a>
         </span>
+        <EmailSignup />
         <span className="foot-keys">
           <kbd className="keychip dim">L</kbd>
           <span style={{ color: "var(--fg-3)" }}>listen</span>
@@ -202,19 +159,17 @@ export default function App() {
         </span>
       </footer>
 
-      {/* Listen overlay */}
       {listen && (
         <ListenOverlay
           os={os}
           onClose={() => setListen(false)}
           onSelectApp={(appId) => {
             setListen(false);
-            setView({ kind: "cheatsheet", appId });
+            navigate(`/apps/${appId}/${os}`);
           }}
         />
       )}
 
-      {/* Shortcut detail modal */}
       {selectedShortcut && (
         <ShortcutModal
           shortcut={selectedShortcut}
@@ -222,7 +177,11 @@ export default function App() {
           onClose={() => setSelectedShortcut(null)}
           onNavigateToApp={(appId) => {
             setSelectedShortcut(null);
-            setView({ kind: "cheatsheet", appId });
+            navigate(`/apps/${appId}/${os}`);
+          }}
+          onOpenDetail={(s) => {
+            setSelectedShortcut(null);
+            navigate(shortcutPath(s));
           }}
         />
       )}
@@ -230,52 +189,8 @@ export default function App() {
   );
 }
 
-// ── Home view ──────────────────────────────────────────────────────────────
-
-interface HomeViewProps {
+export interface LayoutContext {
   os: OS;
-  onPick: (s: Shortcut) => void;
-  onPickApp: (appId: string) => void;
-  highlighted: Set<string>;
-  onFocusedShortcut: (s: Shortcut | null) => void;
-}
-
-function HomeView({
-  os,
-  onPick,
-  onPickApp,
-  highlighted,
-  onFocusedShortcut,
-}: HomeViewProps) {
-  const [localFocused, setLocalFocused] = useState<Shortcut | null>(null);
-
-  const handleFocused = (s: Shortcut | null) => {
-    setLocalFocused(s);
-    onFocusedShortcut(s);
-  };
-
-  return (
-    <div className="home">
-      <div className="home-header">
-        <h1 className="home-title">Every shortcut, every OS.</h1>
-        <p className="home-sub">Search by name, browse by app, or press a combo to identify it.</p>
-      </div>
-
-      <Palette os={os} onPick={onPick} onPickApp={onPickApp} onFocusedShortcut={handleFocused} autoFocus />
-
-      <div className="hero-kb">
-        <Keyboard os={os} highlighted={highlighted} />
-        <div className="kb-caption">
-          {localFocused ? (
-            <>
-              highlighted:{" "}
-              <span className="kb-cap-name">{localFocused.function}</span>
-            </>
-          ) : (
-            "type to search — keys light up below"
-          )}
-        </div>
-      </div>
-    </div>
-  );
+  setSelectedShortcut: (s: Shortcut | null) => void;
+  setListen: (b: boolean) => void;
 }
