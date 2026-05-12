@@ -22,23 +22,42 @@ export function Component() {
   const items = SHORTCUTS.filter((s) => s.appId === app.id);
   const supported = app.supportedOS;
   const preferredOS = supported.includes(os) ? os : supported[0];
+  const osList = supported.length === 1 ? OS_LABELS[supported[0]] : "macOS, Windows, and Linux";
 
   return (
     <>
       <Seo
-        title={`${app.name} Keyboard Shortcuts | Hotkey Lookup`}
-        description={`${items.length} ${app.name} keyboard shortcuts across ${supported.length === 1 ? OS_LABELS[supported[0]] : "macOS, Windows, and Linux"}. Searchable cheatsheet with side-by-side OS combos.`}
+        title={`${app.name} Keyboard Shortcuts — ${osList} Cheatsheet | Hotkey Lookup`}
+        description={`${items.length} ${app.name} keyboard shortcuts for ${osList}. Searchable ${app.name} cheatsheet with side-by-side OS combos. Free, no signup.`}
         path={`/apps/${app.id}`}
+        keywords={[
+          `${app.name} keyboard shortcuts`,
+          `${app.name} shortcuts`,
+          `${app.name} hotkeys`,
+          `${app.name} cheatsheet`,
+          `${app.name} keybindings`,
+          ...supported.map((o) => `${app.name} shortcuts ${OS_LABELS[o]}`),
+          "keyboard shortcuts",
+          "hotkeys",
+        ]}
+        breadcrumbs={[
+          { name: "Home", path: "/" },
+          { name: "Apps", path: "/apps" },
+          { name: app.name, path: `/apps/${app.id}` },
+        ]}
       />
       <div className="page">
         <Link className="back-btn" to="/apps">← All apps</Link>
         <div className="cheat-hero">
           <AppGlyph appId={app.id} name={app.name} size="lg" />
           <div className="cheat-hero-text">
-            <h1>{app.name} shortcuts</h1>
+            <h1>{app.name} keyboard shortcuts</h1>
             <p className="page-lede">
               {items.length} shortcuts
               {app.hint && <> · {app.hint}</>}
+            </p>
+            <p className="page-intro">
+              {items.length} {app.name} keyboard shortcuts mapped across {osList}. Pick your operating system below for the full {app.name} cheatsheet, or compare hotkeys side by side.
             </p>
           </div>
         </div>

@@ -41,13 +41,39 @@ export function Component() {
     ? APPS.filter((a) => !a.id.startsWith("system-") && a.supportedOS.includes(os))
     : [];
 
-  const title = `${app.name} Keyboard Shortcuts for ${OS_LABELS[os]} | Hotkey Lookup`;
-  const description = `Complete list of ${app.name} keyboard shortcuts on ${OS_LABELS[os]}. ${items.length} shortcuts organized by category. Free, no signup, mobile-friendly.`;
+  const isSystem = app.id.startsWith("system-");
+  const subject = isSystem ? `${OS_LABELS[os]} system keyboard shortcuts` : `${app.name} keyboard shortcuts on ${OS_LABELS[os]}`;
+  const title = isSystem
+    ? `${OS_LABELS[os]} Keyboard Shortcuts — System Hotkeys Cheatsheet | Hotkey Lookup`
+    : `${app.name} Keyboard Shortcuts for ${OS_LABELS[os]} — Cheatsheet | Hotkey Lookup`;
+  const description = isSystem
+    ? `Every ${OS_LABELS[os]} system keyboard shortcut in one place — ${items.length} hotkeys${cats.length > 0 ? ` across ${cats.length} categories` : ""}. Free cheatsheet, no signup, mobile-friendly.`
+    : `Complete ${app.name} keyboard shortcuts for ${OS_LABELS[os]} — ${items.length} hotkeys${cats.length > 0 ? ` across ${cats.length} categories` : ""}. Free ${app.name} cheatsheet, copy-friendly, mobile-friendly.`;
 
-  const jsonLd = {
+  const keywords = isSystem
+    ? [
+        `${OS_LABELS[os]} keyboard shortcuts`,
+        `${OS_LABELS[os]} hotkeys`,
+        `${OS_LABELS[os]} shortcuts cheatsheet`,
+        `${OS_LABELS[os]} system shortcuts`,
+        "keyboard shortcuts",
+        "hotkeys",
+      ]
+    : [
+        `${app.name} keyboard shortcuts`,
+        `${app.name} shortcuts ${OS_LABELS[os]}`,
+        `${app.name} hotkeys`,
+        `${app.name} ${OS_LABELS[os]} cheatsheet`,
+        `${app.name} keybindings`,
+        `${OS_LABELS[os]} ${app.name} shortcuts`,
+        "keyboard shortcuts",
+        "hotkeys",
+      ];
+
+  const itemListLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    name: `${app.name} keyboard shortcuts on ${OS_LABELS[os]}`,
+    name: subject,
     numberOfItems: items.length,
     itemListElement: items.slice(0, 50).map((s, i) => ({
       "@type": "ListItem",
@@ -56,6 +82,18 @@ export function Component() {
       url: `https://hotkeylookup.com${shortcutPath(s)}`,
     })),
   };
+
+  const softwareLd = !isSystem
+    ? {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        name: app.name,
+        operatingSystem: OS_LABELS[os],
+        applicationCategory: app.category ?? "Application",
+      }
+    : null;
+
+  const jsonLd = softwareLd ? [itemListLd, softwareLd] : itemListLd;
 
   const shortcuts = (
     <div className="cheat-grid">
@@ -123,16 +161,33 @@ export function Component() {
 
   return (
     <>
-      <Seo title={title} description={description} path={`/apps/${app.id}/${os}`} jsonLd={jsonLd} />
+      <Seo
+        title={title}
+        description={description}
+        path={`/apps/${app.id}/${os}`}
+        jsonLd={jsonLd}
+        keywords={keywords}
+        breadcrumbs={[
+          { name: "Home", path: "/" },
+          { name: OS_LABELS[os], path: `/os/${os}` },
+          { name: app.name, path: `/apps/${app.id}` },
+          { name: OS_LABELS[os], path: `/apps/${app.id}/${os}` },
+        ]}
+      />
       <div className="page">
         <Link className="back-btn" to={`/apps/${app.id}`}>← {app.name}</Link>
         <div className="cheat-hero">
           <AppGlyph appId={app.id} name={app.name} size="lg" />
           <div className="cheat-hero-text">
-            <h1>{app.name} shortcuts for {OS_LABELS[os]}</h1>
+            <h1>{app.name} keyboard shortcuts for {OS_LABELS[os]}</h1>
             <p className="page-lede">
               {items.length} shortcuts{cats.length > 0 ? ` · ${cats.length} categories` : ""}
               {app.hint && <> · {app.hint}</>}
+            </p>
+            <p className="page-intro">
+              {isSystem
+                ? `Every system-wide ${OS_LABELS[os]} keyboard shortcut, organized by category. Use the search above to jump to any hotkey, or print this cheatsheet for your desk.`
+                : `The full list of ${app.name} keyboard shortcuts on ${OS_LABELS[os]} — organized by category and matched key-by-key to the ${OS_LABELS[os]} keyboard layout. Use these hotkeys to work faster in ${app.name}.`}
             </p>
             {otherOSes.length > 0 && (
               <p className="cheat-os-toggle">

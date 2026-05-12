@@ -22,9 +22,25 @@ export function Component() {
   return (
     <>
       <Seo
-        title="Hotkey Lookup — Keyboard Shortcuts for macOS, Windows & Linux"
-        description="Search keyboard shortcuts across macOS, Windows, and Linux — system-wide and for the apps you use every day. Or press a combo and see what it does everywhere."
+        title="Hotkey Lookup — Keyboard Shortcuts for macOS, Windows & Linux Apps"
+        description="Search keyboard shortcuts for macOS, Windows, and Linux — system hotkeys plus VS Code, Chrome, Figma, Slack, Notion, Linear, and more. Free, no signup. Press a combo to identify it across every OS."
         path="/"
+        keywords={[
+          "keyboard shortcuts",
+          "hotkeys",
+          "macOS keyboard shortcuts",
+          "Windows keyboard shortcuts",
+          "Linux keyboard shortcuts",
+          "Mac shortcuts",
+          "PC shortcuts",
+          "VS Code shortcuts",
+          "Chrome shortcuts",
+          "Figma shortcuts",
+          "Slack shortcuts",
+          "Notion shortcuts",
+          "cheatsheet",
+          "keybindings",
+        ]}
         jsonLd={[
           {
             "@context": "https://schema.org",
@@ -59,6 +75,22 @@ export function Component() {
                 acceptedAnswer: {
                   "@type": "Answer",
                   text: "Yes. Listen mode lets you press a key combination and see what it does across macOS, Windows, Linux, and the apps you use.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "Does Hotkey Lookup cover macOS, Windows, and Linux?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "Yes. Every shortcut is mapped to its macOS, Windows, and Linux equivalent where applicable, so you can compare keyboard shortcuts side by side across all three operating systems.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "Which apps are supported?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "Supported apps include VS Code, Cursor, Chrome, Firefox, Safari, Figma, Slack, Notion, Linear, Google Docs, Terminal, and Finder / Explorer, plus system-wide shortcuts for each OS.",
                 },
               },
             ],

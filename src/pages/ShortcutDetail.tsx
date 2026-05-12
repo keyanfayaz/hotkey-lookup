@@ -55,8 +55,16 @@ export function Component() {
 
   if (!shortcut || !app) return <NotFoundContent label="Shortcut not found" />;
 
-  const title = `${shortcut.function} — ${app.name} keyboard shortcut${supportedOS.length === 1 ? ` (${OS_LABELS[supportedOS[0]]})` : ""} | Hotkey Lookup`;
-  const description = `${shortcut.function} in ${app.name}: ${currentCombos[0] ?? "no shortcut"} on ${OS_LABELS[displayOS]}. ${shortcut.description ?? ""}`.trim();
+  const title = `${shortcut.function} — ${app.name} keyboard shortcut${supportedOS.length === 1 ? ` (${OS_LABELS[supportedOS[0]]})` : " (Mac, Windows, Linux)"} | Hotkey Lookup`;
+  const description = `${shortcut.function} in ${app.name}: ${currentCombos[0] ?? "no shortcut"} on ${OS_LABELS[displayOS]}.${supportedOS.length > 1 ? ` See the ${app.name} keyboard shortcut on macOS, Windows, and Linux.` : ""} ${shortcut.description ?? ""}`.trim();
+  const keywords = [
+    `${shortcut.function} ${app.name}`,
+    `${app.name} ${shortcut.function} shortcut`,
+    `${app.name} keyboard shortcuts`,
+    ...supportedOS.map((o) => `${shortcut.function} ${app.name} ${OS_LABELS[o]}`),
+    `${app.name} hotkeys`,
+    "keyboard shortcuts",
+  ];
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -72,7 +80,19 @@ export function Component() {
 
   return (
     <>
-      <Seo title={title} description={description} path={shortcutPath(shortcut)} jsonLd={jsonLd} />
+      <Seo
+        title={title}
+        description={description}
+        path={shortcutPath(shortcut)}
+        jsonLd={jsonLd}
+        keywords={keywords}
+        breadcrumbs={[
+          { name: "Home", path: "/" },
+          { name: app.name, path: `/apps/${app.id}` },
+          { name: OS_LABELS[displayOS], path: `/apps/${app.id}/${displayOS}` },
+          { name: shortcut.function, path: shortcutPath(shortcut) },
+        ]}
+      />
       <div className="page">
         <Link className="back-btn" to={`/apps/${app.id}/${displayOS}`}>← {app.name}</Link>
 

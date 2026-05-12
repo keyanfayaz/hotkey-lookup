@@ -14,9 +14,26 @@ export function Component() {
   return (
     <>
       <Seo
-        title="All Apps — Keyboard Shortcut Cheatsheets | Hotkey Lookup"
-        description="Browse keyboard shortcuts for every supported app: VS Code, Chrome, Figma, Notion, Slack, Linear, and more — across macOS, Windows, and Linux."
+        title="All Apps — Keyboard Shortcut Cheatsheets for Mac, Windows & Linux | Hotkey Lookup"
+        description={`Browse keyboard shortcuts for ${APPS.length} apps including VS Code, Cursor, Chrome, Firefox, Figma, Notion, Slack, Linear, Google Docs, and Terminal — ${SHORTCUTS.length} hotkeys across macOS, Windows, and Linux.`}
         path="/apps"
+        keywords={[
+          "keyboard shortcuts by app",
+          "app shortcuts cheatsheet",
+          "VS Code shortcuts",
+          "Chrome shortcuts",
+          "Figma shortcuts",
+          "Slack shortcuts",
+          "Notion shortcuts",
+          "Linear shortcuts",
+          "Cursor shortcuts",
+          "Google Docs shortcuts",
+          "keyboard shortcuts macOS Windows Linux",
+        ]}
+        breadcrumbs={[
+          { name: "Home", path: "/" },
+          { name: "Apps", path: "/apps" },
+        ]}
       />
       <div className="page">
         <div className="page-head">

@@ -28,9 +28,31 @@ export function Component() {
   return (
     <>
       <Seo
-        title={`${OS_LABELS[os]} Keyboard Shortcuts — Apps + System | Hotkey Lookup`}
-        description={`Keyboard shortcuts for ${OS_LABELS[os]} — system shortcuts plus the apps you use every day. ${totalShortcuts} shortcuts across ${apps.length} apps.`}
+        title={`${OS_LABELS[os]} Keyboard Shortcuts — System + App Cheatsheets | Hotkey Lookup`}
+        description={`The complete ${OS_LABELS[os]} keyboard shortcuts guide — system hotkeys plus VS Code, Chrome, Figma, Slack, Notion, and more. ${totalShortcuts} shortcuts across ${apps.length} apps. Free, searchable, no signup.`}
         path={`/os/${os}`}
+        keywords={[
+          `${OS_LABELS[os]} keyboard shortcuts`,
+          `${OS_LABELS[os]} hotkeys`,
+          `${OS_LABELS[os]} shortcuts`,
+          `${OS_LABELS[os]} cheatsheet`,
+          `${OS_LABELS[os]} system shortcuts`,
+          `${OS_LABELS[os]} keybindings`,
+          ...apps.slice(0, 8).map((a) => `${a.name} shortcuts ${OS_LABELS[os]}`),
+          "keyboard shortcuts",
+          "hotkeys",
+        ]}
+        breadcrumbs={[
+          { name: "Home", path: "/" },
+          { name: OS_LABELS[os], path: `/os/${os}` },
+        ]}
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          name: `${OS_LABELS[os]} keyboard shortcuts`,
+          description: `Keyboard shortcut cheatsheets for ${OS_LABELS[os]} apps and the system itself.`,
+          url: `https://hotkeylookup.com/os/${os}`,
+        }}
       />
       <div className="page">
         <div className="cheat-hero">
@@ -39,6 +61,9 @@ export function Component() {
             <h1>{OS_LABELS[os]} keyboard shortcuts</h1>
             <p className="page-lede">
               {totalShortcuts} shortcuts across {apps.length} apps and the system itself.
+            </p>
+            <p className="page-intro">
+              Every {OS_LABELS[os]} keyboard shortcut in one place — system-wide hotkeys plus per-app cheatsheets for VS Code, Chrome, Figma, Slack, Notion, Linear, and more. Pick an app for its full {OS_LABELS[os]} shortcut list.
             </p>
             <p className="cheat-os-toggle">
               <Link to={`/apps/${systemAppId}/${os}`}>System shortcuts →</Link>

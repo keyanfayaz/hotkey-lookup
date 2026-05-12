@@ -25,9 +25,22 @@ export function Component() {
   return (
     <>
       <Seo
-        title={`Printable ${OS_LABELS[os]} Shortcut Cheatsheet | Hotkey Lookup`}
-        description={`A printable, printable-friendly cheatsheet of every ${OS_LABELS[os]} system shortcut — organized by category. Free, no signup.`}
+        title={`Printable ${OS_LABELS[os]} Keyboard Shortcuts Cheatsheet | Hotkey Lookup`}
+        description={`A print-friendly cheatsheet of every ${OS_LABELS[os]} system keyboard shortcut — ${items.length} hotkeys organized by category. Free, no signup.`}
         path={`/os/${os}/cheatsheet`}
+        keywords={[
+          `${OS_LABELS[os]} keyboard shortcuts cheatsheet`,
+          `${OS_LABELS[os]} shortcuts printable`,
+          `${OS_LABELS[os]} hotkeys list`,
+          `${OS_LABELS[os]} cheatsheet`,
+          `${OS_LABELS[os]} system shortcuts`,
+          "printable keyboard shortcuts",
+        ]}
+        breadcrumbs={[
+          { name: "Home", path: "/" },
+          { name: OS_LABELS[os], path: `/os/${os}` },
+          { name: "Cheatsheet", path: `/os/${os}/cheatsheet` },
+        ]}
       />
       <div className="page">
         <Link className="back-btn" to={`/os/${os}`}>← {OS_LABELS[os]}</Link>

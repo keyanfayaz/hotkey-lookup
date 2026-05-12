@@ -494,6 +494,7 @@
   }
   .page-head h1 { margin: 0; font-size: 36px; font-weight: 500; letter-spacing: -0.02em; }
   .page-lede { margin: 6px 0 0; color: var(--fg-3); font-size: 14px; }
+  .page-intro { margin: 14px 0 0; color: var(--fg-2); font-size: 14px; line-height: 1.55; max-width: 70ch; }
   .page-meta { color: var(--fg-3); font-size: 12px; font-family: var(--font-mono); letter-spacing: 0.04em; }
   .back-btn {
     background: transparent; border: 0; color: var(--fg-3);

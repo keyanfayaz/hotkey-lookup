@@ -10,9 +10,21 @@ export function Component() {
   return (
     <>
       <Seo
-        title="Browse Keyboard Shortcuts by App, Action, or OS | Hotkey Lookup"
-        description="Browse every keyboard shortcut across all supported apps. Filter by app, see every action in one list, or compare side by side across macOS, Windows, and Linux."
+        title="Browse All Keyboard Shortcuts — by App, Action, or OS | Hotkey Lookup"
+        description="Browse every keyboard shortcut across every supported app. Filter by app or action, see hotkeys in one list, or compare them side by side across macOS, Windows, and Linux."
         path="/browse"
+        keywords={[
+          "browse keyboard shortcuts",
+          "all keyboard shortcuts list",
+          "keyboard shortcuts directory",
+          "hotkeys list",
+          "shortcuts by app",
+          "shortcuts macOS Windows Linux",
+        ]}
+        breadcrumbs={[
+          { name: "Home", path: "/" },
+          { name: "Browse", path: "/browse" },
+        ]}
       />
       <Browse
         os={os}
