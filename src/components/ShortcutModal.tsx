@@ -5,6 +5,7 @@ import type { OS, Shortcut } from "../lib/types";
 import { KeyCombo } from "./KeyCombo";
 import { Keyboard } from "./Keyboard";
 import { AppGlyph } from "./AppIcon";
+import { FavouriteButton } from "./FavouriteButton";
 
 const OS_LABELS: Record<OS, string> = {
   macos: "macOS",
@@ -84,6 +85,7 @@ export function ShortcutModal({ shortcut, os, onClose, onNavigateToApp, onOpenDe
         </div>
 
         <div className="smodal-body">
+          <FavouriteButton shortcut={shortcut} onViewFavourites={onClose} />
           {currentCombos.length > 0 ? (
             <div className="smodal-combos">
               {currentCombos.map((c) => (
