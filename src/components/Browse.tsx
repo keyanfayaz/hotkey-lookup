@@ -1,15 +1,19 @@
 import { useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { APPS, SHORTCUTS, APP_BY_ID } from "../data";
 import type { OS, Shortcut } from "../lib/types";
 import { KeyCombo } from "./KeyCombo";
 import { AppGlyph } from "./AppIcon";
+import { FavouriteButton } from "./FavouriteButton";
+import { useFavourites } from "../hooks/useFavourites";
 
-type Mode = "by-app" | "by-action" | "by-os";
+type Mode = "by-app" | "by-action" | "by-os" | "favourites";
 
 const MODE_LEDE: Record<Mode, string> = {
   "by-app":    "Pick an app. Get the cheatsheet.",
   "by-action": "Every shortcut, every app — one list.",
   "by-os":     "Same action. Three keyboards. One row.",
+  "favourites": "Your saved shortcuts, across apps and operating systems.",
 };
 
 interface Props {
@@ -19,18 +23,30 @@ interface Props {
 }
 
 export function Browse({ os, onSelect, onSelectShortcut }: Props) {
-  const [mode, setMode] = useState<Mode>("by-app");
+  const [params, setParams] = useSearchParams();
+  const view = params.get("view");
   const [filter, setFilter] = useState("");
+  const { ids, ready, persistent } = useFavourites();
+  // Query views are client-specific, so first match the prerendered By app view.
+  const mode: Mode = ready && (view === "by-action" || view === "by-os" || view === "favourites") ? view : "by-app";
+
+  const setMode = (next: Mode) => {
+    const nextParams = new URLSearchParams(params);
+    if (next === "by-app") nextParams.delete("view");
+    else nextParams.set("view", next);
+    setParams(nextParams);
+    setFilter("");
+  };
 
   const filteredShortcuts = useMemo(() => {
     const q = filter.trim().toLowerCase();
-    if (!q) return SHORTCUTS;
     return SHORTCUTS.filter((s) =>
+      (mode !== "favourites" || ids.includes(s.id)) &&
       (s.function + " " + (s.category ?? "") + " " + (APP_BY_ID[s.appId]?.name ?? ""))
         .toLowerCase()
         .includes(q)
     );
-  }, [filter]);
+  }, [filter, mode, ids]);
 
   return (
     <div className="page">
@@ -39,11 +55,12 @@ export function Browse({ os, onSelect, onSelectShortcut }: Props) {
           <h1>Browse</h1>
           <p className="page-lede">{MODE_LEDE[mode]}</p>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <div className="browse-tools">
           {mode !== "by-app" && (
             <input
               className="page-filter"
               placeholder="filter…"
+              aria-label="Filter shortcuts"
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
             />
@@ -52,19 +69,27 @@ export function Browse({ os, onSelect, onSelectShortcut }: Props) {
         </div>
       </div>
 
-      <div className="browse-tabs" role="tablist" aria-label="Browse mode">
-        {(["by-app", "by-action", "by-os"] as Mode[]).map((m) => (
+      <div className="browse-tabs" role="group" aria-label="Browse mode">
+        {(["by-app", "by-action", "by-os", "favourites"] as Mode[]).map((m) => (
           <button
             key={m}
-            role="tab"
-            aria-selected={mode === m}
+            type="button"
+            aria-pressed={mode === m}
             className={`browse-tab${mode === m ? " on" : ""}`}
-            onClick={() => { setMode(m); setFilter(""); }}
+            onClick={() => setMode(m)}
           >
-            {m === "by-app" ? "By app" : m === "by-action" ? "By action" : "By OS"}
+            {m === "by-app" ? "By app" : m === "by-action" ? "By action" : m === "by-os" ? "By OS" : `Favourites (${ids.length})`}
           </button>
         ))}
       </div>
+
+      {mode === "favourites" && (
+        <p className="favourites-note" role="status">
+          {!ready ? "Loading favourites…" : persistent
+            ? `${ids.length} saved. Favourites are stored in this browser on this device.`
+            : "Browser storage is unavailable. Favourites will only last for this visit."}
+        </p>
+      )}
 
       {mode === "by-app" && (
         <div className="app-grid">
@@ -85,20 +110,23 @@ export function Browse({ os, onSelect, onSelectShortcut }: Props) {
         </div>
       )}
 
-      {mode === "by-action" && (
+      {(mode === "by-action" || mode === "favourites") && (
         <div className="browse-table">
           <div className="browse-head browse-head-action">
             <span>Action</span>
             <span>App</span>
             <span>Combo</span>
+            <span className="sr-only">Favourite</span>
           </div>
           <div className="browse-body">
             {filteredShortcuts.map((s) => {
               const app = APP_BY_ID[s.appId];
               const combos = s.combos[os] ?? [];
               return (
-                <button key={s.id} className="browse-row" onClick={() => onSelectShortcut(s)}>
-                  <span className="browse-action">{s.function}</span>
+                <div key={s.id} className="browse-row">
+                  <button type="button" className="browse-action browse-open" onClick={() => onSelectShortcut(s)}>
+                    {s.function}
+                  </button>
                   <span className="browse-app">
                     <AppGlyph
                       appId={s.appId}
@@ -115,11 +143,16 @@ export function Browse({ os, onSelect, onSelectShortcut }: Props) {
                       <span className="keys-na">—</span>
                     )}
                   </span>
-                </button>
+                  <FavouriteButton shortcut={s} compact />
+                </div>
               );
             })}
             {filteredShortcuts.length === 0 && (
-              <div className="browse-empty">no_match</div>
+              <div className="browse-empty">
+                {mode === "favourites" && !ready ? "Loading favourites…" : mode === "favourites" && ids.length === 0
+                  ? "No favourites yet. Save a shortcut with its star button in By action, By OS, or a shortcut detail."
+                  : "No shortcuts match your filter."}
+              </div>
             )}
           </div>
         </div>
@@ -132,12 +165,13 @@ export function Browse({ os, onSelect, onSelectShortcut }: Props) {
             <span>macOS</span>
             <span>Windows</span>
             <span>Linux</span>
+            <span className="sr-only">Favourite</span>
           </div>
           <div className="browse-body">
             {filteredShortcuts.map((s) => {
               const app = APP_BY_ID[s.appId];
               return (
-                <button key={s.id} className="browse-row browse-row-os" onClick={() => onSelectShortcut(s)}>
+                <div key={s.id} className="browse-row browse-row-os">
                   <span className="browse-action">
                     <AppGlyph
                       appId={s.appId}
@@ -145,7 +179,7 @@ export function Browse({ os, onSelect, onSelectShortcut }: Props) {
                       onClick={onSelect}
                       title={app ? `Open ${app.name} cheatsheet` : undefined}
                     />
-                    {s.function}
+                    <button type="button" className="browse-open" onClick={() => onSelectShortcut(s)}>{s.function}</button>
                   </span>
                   {(["macos", "windows", "linux"] as OS[]).map((o) => {
                     const combos = s.combos[o] ?? [];
@@ -159,11 +193,12 @@ export function Browse({ os, onSelect, onSelectShortcut }: Props) {
                       </span>
                     );
                   })}
-                </button>
+                  <FavouriteButton shortcut={s} compact />
+                </div>
               );
             })}
             {filteredShortcuts.length === 0 && (
-              <div className="browse-empty">no_match</div>
+              <div className="browse-empty">No shortcuts match your filter.</div>
             )}
           </div>
         </div>

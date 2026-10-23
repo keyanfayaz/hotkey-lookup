@@ -13,6 +13,7 @@ import { getRelated } from "../data/_generated/related";
 import { SHORTCUTS } from "../data";
 import type { OS, Shortcut } from "../lib/types";
 import type { LayoutContext } from "../components/Layout";
+import { FavouriteButton } from "../components/FavouriteButton";
 
 const OS_LABELS: Record<OS, string> = {
   macos: "macOS",
@@ -105,6 +106,7 @@ export function Component() {
               {shortcut.category && <> · {shortcut.category}</>}
             </p>
           </div>
+          <FavouriteButton shortcut={shortcut} />
         </div>
 
         <section className="cheat-section">

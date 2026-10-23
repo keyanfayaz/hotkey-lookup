@@ -9,6 +9,7 @@ import { ListenOverlay } from "./ListenOverlay";
 import { ShortcutModal } from "./ShortcutModal";
 import { EmailSignup } from "./EmailSignup";
 import { shortcutPath } from "../lib/slugs";
+import { FavouritesProvider } from "../hooks/useFavourites";
 
 function ThemeIcon({ theme }: { theme: string }) {
   if (theme === "dark") {
@@ -73,7 +74,7 @@ export default function Layout() {
   );
 
   return (
-    <>
+    <FavouritesProvider>
       <header className="topbar">
         <Link className="brand" to="/">
           <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden>
@@ -185,7 +186,7 @@ export default function Layout() {
           }}
         />
       )}
-    </>
+    </FavouritesProvider>
   );
 }
 
