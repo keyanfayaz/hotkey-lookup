@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { createRequire } from "node:module";
 import test from "node:test";
-import { act, useState } from "react";
+import { act, useState, type ReactNode } from "react";
 import { renderToString } from "react-dom/server";
 import { Link, MemoryRouter, Outlet, Route, Routes } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
@@ -10,7 +10,7 @@ import { Browse } from "../src/components/Browse";
 import { FavouriteButton } from "../src/components/FavouriteButton";
 import { ShortcutModal } from "../src/components/ShortcutModal";
 import ShortcutDetail from "../src/pages/ShortcutDetail";
-import { FavouritesProvider } from "../src/hooks/useFavourites";
+import { FavouritesProvider, useFavourites } from "../src/hooks/useFavourites";
 import { FAVOURITES_STORAGE_KEY, parseFavourites, readFavourites, toggleFavourite, writeFavourites } from "../src/lib/favourites";
 import { SHORTCUTS } from "../src/data";
 import type { OS, Shortcut } from "../src/lib/types";
@@ -60,7 +60,7 @@ function Harness() {
   );
 }
 
-async function mount(initial: string | null = null, blocked: "get" | "set" | "access" | null = null, serverHtml?: string) {
+async function mount(initial: string | null = null, blocked: "get" | "set" | "access" | null = null, serverHtml?: string, content?: ReactNode) {
   const dom = new JSDOM(`<div id="root">${serverHtml ?? ""}</div>`, { url: "https://hotkeylookup.test" });
   const originalGlobals = new Map<string, PropertyDescriptor | undefined>();
   for (const [key, value] of Object.entries({ window: dom.window, document: dom.window.document, navigator: dom.window.navigator, IS_REACT_ACT_ENVIRONMENT: true })) {
@@ -78,7 +78,7 @@ async function mount(initial: string | null = null, blocked: "get" | "set" | "ac
   const { createRoot, hydrateRoot } = await import("react-dom/client");
   const tree = (
     <MemoryRouter initialEntries={["/browse?view=by-action"]} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-      <HelmetProvider><FavouritesProvider><Harness /></FavouritesProvider></HelmetProvider>
+      <HelmetProvider>{content ?? <FavouritesProvider><Harness /></FavouritesProvider>}</HelmetProvider>
     </MemoryRouter>
   );
   let root!: ReturnType<typeof createRoot>;
@@ -158,11 +158,113 @@ test("add, navigate, change OS, show saved view, reload, and remove", async () =
 });
 
 test("stored duplicate and unknown IDs produce one known saved shortcut", async () => {
-  const app = await mount(JSON.stringify([shortcut.id, shortcut.id, "removed.shortcut", 123]));
+  const stored = [shortcut.id, shortcut.id, "removed.shortcut", 123];
+  const app = await mount(JSON.stringify(stored));
   try {
     await app.click(app.link("Saved view"));
     assert.equal(app.document.querySelectorAll(".browse-row").length, 1);
-    assert.deepEqual(JSON.parse(app.dom.window.localStorage.getItem(FAVOURITES_STORAGE_KEY)), [shortcut.id]);
+    assert.deepEqual(JSON.parse(app.dom.window.localStorage.getItem(FAVOURITES_STORAGE_KEY)), stored, "Mounting must not write a snapshot back to shared storage");
+    await app.click(app.button());
+    assert.deepEqual(JSON.parse(app.dom.window.localStorage.getItem(FAVOURITES_STORAGE_KEY)), []);
+  } finally { await app.close(); }
+});
+
+const paletteId = "vscode.command-palette";
+
+function TabProbe({ name }: { name: string }) {
+  const { ids, toggle } = useFavourites();
+  return (
+    <section data-tab={name}>
+      <output>{JSON.stringify(ids)}</output>
+      <button name="chrome" onClick={() => toggle(shortcut.id)}>Chrome</button>
+      <button name="vscode" onClick={() => toggle(paletteId)}>VS Code</button>
+      <button name="rapid" onClick={() => { toggle(shortcut.id); toggle(paletteId); toggle(shortcut.id); }}>Rapid sequence</button>
+    </section>
+  );
+}
+
+const twoTabs = <><FavouritesProvider><TabProbe name="A" /></FavouritesProvider><FavouritesProvider><TabProbe name="B" /></FavouritesProvider></>;
+const tabIds = (document: Document, name: string): string[] => JSON.parse(document.querySelector(`[data-tab="${name}"] output`)!.textContent!);
+
+async function storageEvent(app: Awaited<ReturnType<typeof mount>>, value: string | null, key: string | null = FAVOURITES_STORAGE_KEY, area = app.dom.window.localStorage) {
+  await act(async () => app.dom.window.dispatchEvent(new app.dom.window.StorageEvent("storage", { key, newValue: value, storageArea: area })));
+}
+
+test("two tab states merge saves before storage events arrive and do not resurrect removals", async () => {
+  const app = await mount(null, null, undefined, twoTabs);
+  const click = (tab: string, name: string) => app.click(app.document.querySelector(`[data-tab="${tab}"] [name="${name}"]`));
+  try {
+    await click("A", "chrome");
+    assert.deepEqual(tabIds(app.document, "B"), [], "B has not received a storage event yet");
+    await click("B", "vscode");
+    assert.deepEqual(JSON.parse(app.readStored()), [shortcut.id, paletteId]);
+    await storageEvent(app, app.readStored());
+    assert.deepEqual(tabIds(app.document, "A"), [shortcut.id, paletteId]);
+    assert.deepEqual(tabIds(app.document, "B"), [shortcut.id, paletteId]);
+    await click("A", "chrome");
+    assert.deepEqual(tabIds(app.document, "B"), [shortcut.id, paletteId], "B is stale before its removal event");
+    await click("B", "vscode");
+    assert.deepEqual(JSON.parse(app.readStored()), []);
+    await storageEvent(app, app.readStored());
+    assert.deepEqual(tabIds(app.document, "A"), []);
+    assert.deepEqual(tabIds(app.document, "B"), []);
+  } finally { await app.close(); }
+});
+
+test("rapid toggles and stale queued events keep the latest persisted list", async () => {
+  const app = await mount(null, null, undefined, twoTabs);
+  try {
+    await app.click(app.document.querySelector('[data-tab="A"] [name="rapid"]'));
+    assert.deepEqual(JSON.parse(app.readStored()), [paletteId]);
+    assert.deepEqual(tabIds(app.document, "A"), [paletteId]);
+    await storageEvent(app, JSON.stringify([shortcut.id]));
+    await storageEvent(app, JSON.stringify([shortcut.id, paletteId]));
+    assert.deepEqual(tabIds(app.document, "A"), [paletteId]);
+    assert.deepEqual(tabIds(app.document, "B"), [paletteId]);
+    assert.deepEqual(JSON.parse(app.readStored()), [paletteId]);
+  } finally { await app.close(); }
+});
+
+test("stale buttons for the same shortcut preserve save/remove intent", async () => {
+  const app = await mount(null, null, undefined, twoTabs);
+  const click = (tab: string) => app.click(app.document.querySelector(`[data-tab="${tab}"] [name="chrome"]`));
+  try {
+    await click("A");
+    await click("B");
+    assert.deepEqual(JSON.parse(app.readStored()), [shortcut.id], "Both stale Save buttons should save the shortcut");
+    await storageEvent(app, app.readStored());
+    await click("A");
+    await click("B");
+    assert.deepEqual(JSON.parse(app.readStored()), [], "Both stale Remove buttons should leave the shortcut removed");
+  } finally { await app.close(); }
+});
+
+test("storage removal and clear reconcile without writes; unrelated events are ignored", async () => {
+  const app = await mount(JSON.stringify([shortcut.id]), null, undefined, twoTabs);
+  try {
+    app.dom.window.localStorage.removeItem(FAVOURITES_STORAGE_KEY);
+    await storageEvent(app, null, "unrelated-key");
+    await storageEvent(app, null, FAVOURITES_STORAGE_KEY, app.dom.window.sessionStorage);
+    assert.deepEqual(tabIds(app.document, "A"), [shortcut.id]);
+    await storageEvent(app, null);
+    assert.deepEqual(tabIds(app.document, "A"), []);
+    assert.equal(app.readStored(), null, "Receiving an event must not recreate a removed key");
+    app.dom.window.localStorage.setItem(FAVOURITES_STORAGE_KEY, JSON.stringify([paletteId, paletteId, "unknown.id"]));
+    await storageEvent(app, "stale event value");
+    assert.deepEqual(tabIds(app.document, "A"), [paletteId]);
+    app.dom.window.localStorage.clear();
+    await storageEvent(app, null, null);
+    assert.deepEqual(tabIds(app.document, "B"), []);
+    assert.equal(app.readStored(), null);
+  } finally { await app.close(); }
+});
+
+test("rapid toggles remain in memory after a write failure", async () => {
+  const app = await mount(null, "set", undefined, twoTabs);
+  try {
+    await app.click(app.document.querySelector('[data-tab="A"] [name="rapid"]'));
+    assert.deepEqual(tabIds(app.document, "A"), [paletteId]);
+    assert.equal(app.readStored(), null);
   } finally { await app.close(); }
 });
 
